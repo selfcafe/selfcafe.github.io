@@ -1209,31 +1209,39 @@ function submitSiteLogin() {
   const val = document.getElementById('site-pw-input').value.trim();
   const err = document.getElementById('site-pw-error');
   if (!val) { err.textContent = 'パスワードを入力してください'; setTimeout(() => { err.textContent=''; }, 2000); return; }
+  try {
+    // store_passwordsから照合（{storeId: password}形式）
+    let customPws = {};
+    try { customPws = JSON.parse(localStorage.getItem(STORE_PW_KEY) || '{}'); } catch(_) { localStorage.removeItem(STORE_PW_KEY); }
+    let storeId = Object.entries(customPws).find(([, pw]) => pw === val)?.[0] || null;
 
-  // store_passwordsから照合（{storeId: password}形式）
-  const customPws = JSON.parse(localStorage.getItem(STORE_PW_KEY) || '{}');
-  let storeId = Object.entries(customPws).find(([, pw]) => pw === val)?.[0] || null;
+    // GAS未ロード時のフォールバック：SITE_PWで管理者ログイン
+    if (!storeId && val === SITE_PW) storeId = '__admin__';
 
-  if (!storeId) {
-    err.textContent = 'パスワードが違います';
-    document.getElementById('site-pw-input').value = '';
-    document.getElementById('site-pw-input').focus();
-    setTimeout(() => { err.textContent = ''; }, 2000);
-    return;
-  }
-  if (storeId === '__admin__') {
-    sessionStorage.setItem('admin_authed', '1');
-    sessionStorage.setItem('last_active', String(Date.now()));
-    document.getElementById('site-lock').classList.add('hidden');
-    showPage('admin');
-  } else {
-    sessionStorage.setItem('site_authed', '1');
-    sessionStorage.setItem('site_authed_store', storeId);
-    sessionStorage.setItem('last_active', String(Date.now()));
-    localStorage.setItem('last_login_store', storeId);
-    document.getElementById('site-lock').classList.add('hidden');
-    storeTab = storeId;
-    showPage('store');
+    if (!storeId) {
+      err.textContent = 'パスワードが違います';
+      document.getElementById('site-pw-input').value = '';
+      document.getElementById('site-pw-input').focus();
+      setTimeout(() => { err.textContent = ''; }, 2000);
+      return;
+    }
+    if (storeId === '__admin__') {
+      sessionStorage.setItem('admin_authed', '1');
+      sessionStorage.setItem('last_active', String(Date.now()));
+      document.getElementById('site-lock').classList.add('hidden');
+      showPage('admin');
+    } else {
+      sessionStorage.setItem('site_authed', '1');
+      sessionStorage.setItem('site_authed_store', storeId);
+      sessionStorage.setItem('last_active', String(Date.now()));
+      localStorage.setItem('last_login_store', storeId);
+      document.getElementById('site-lock').classList.add('hidden');
+      storeTab = storeId;
+      showPage('store');
+    }
+  } catch(e) {
+    err.textContent = 'エラー: ' + e.message;
+    console.error('submitSiteLogin:', e);
   }
 }
 
