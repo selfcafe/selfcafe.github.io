@@ -588,10 +588,11 @@ async function initGas() {
     });
     const gasKeys = new Set((settings || []).map(r => r.key));
     (settings || []).forEach(r => {
+      const clean = v => String(v).replace(/[\x00-\x1f]/g, '');
       if (r.key === 'admin_pin')       _adminPin = r.value;
-      if (r.key === 'store_passwords') localStorage.setItem(STORE_PW_KEY,       r.value);
-      if (r.key === 'custom_stores')   localStorage.setItem(CUSTOM_STORES_KEY,  r.value);
-      if (r.key === 'deleted_stores')  localStorage.setItem(DELETED_STORES_KEY, r.value);
+      if (r.key === 'store_passwords') localStorage.setItem(STORE_PW_KEY,       clean(r.value));
+      if (r.key === 'custom_stores')   localStorage.setItem(CUSTOM_STORES_KEY,  clean(r.value));
+      if (r.key === 'deleted_stores')  localStorage.setItem(DELETED_STORES_KEY, clean(r.value));
     });
     if (!gasKeys.has('store_passwords') && localStorage.getItem(STORE_PW_KEY)) _syncStorePw();
     if (!gasKeys.has('custom_stores')   && localStorage.getItem(CUSTOM_STORES_KEY)) _syncCustomStores();
