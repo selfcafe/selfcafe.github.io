@@ -870,7 +870,10 @@ function setInventoryData(storeId, data) {
   localStorage.setItem(INVENTORY_KEY, JSON.stringify(all));
 }
 function updateInventoryField(idx, field, value) {
-  const products = getAvailableProducts(storeTab).filter(p => p.name !== 'その他');
+  const productOrder = new Map(PRODUCTS.map((p, i) => [p.name, i]));
+  const products = getAvailableProducts(storeTab)
+    .filter(p => p.name !== 'その他')
+    .sort((a, b) => (productOrder.get(a.name) ?? 999) - (productOrder.get(b.name) ?? 999));
   const p = products[idx];
   if (!p) return;
   const data = getInventoryData(storeTab);
@@ -882,7 +885,10 @@ function updateInventoryField(idx, field, value) {
 function renderInventory() {
   const wrap = document.getElementById('inventory-table-wrap');
   if (!wrap) return;
-  const products = getAvailableProducts(storeTab).filter(p => p.name !== 'その他');
+  const productOrder = new Map(PRODUCTS.map((p, i) => [p.name, i]));
+  const products = getAvailableProducts(storeTab)
+    .filter(p => p.name !== 'その他')
+    .sort((a, b) => (productOrder.get(a.name) ?? 999) - (productOrder.get(b.name) ?? 999));
   if (!products.length) {
     wrap.innerHTML = '<div style="color:#aaa;padding:20px">商品が設定されていません</div>';
     return;
