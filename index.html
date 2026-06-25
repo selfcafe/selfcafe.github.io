@@ -652,62 +652,64 @@ function _initRealtime() {
 
 const PRODUCTS = [
   /* ── アペックス 100RS ── */
-  { vendor:'apex', name:'抹茶ラテ',                       label:'抹茶ラテ',                         unit:'袋',     caseUnit:'1ケース/18袋' },
-  { vendor:'apex', name:'コーヒー豆',                     label:'コーヒー豆',                       unit:'袋',     caseUnit:'1ケース/25袋' },
-  { vendor:'apex', name:'プレミアムココア',               label:'プレミアムココア',                 unit:'袋',     caseUnit:'1ケース/40袋' },
-  { vendor:'apex', name:'ザ・ブレンド豆',                label:'ザ・ブレンド豆',                  unit:'袋',     caseUnit:'1ケース/25袋' },
-  { vendor:'apex', name:'いちごオーレ',                   label:'いちごオーレ',                     unit:'袋',     caseUnit:'1ケース/20袋' },
-  { vendor:'apex', name:'クリーミー',                     label:'クリーミー',                       unit:'袋',     caseUnit:'1ケース/24袋' },
-  { vendor:'apex', name:'砂糖',                           label:'砂糖',                             unit:'袋',     caseUnit:'1ケース/20袋' },
-  { vendor:'apex', name:'紅茶(粉末)',                     label:'紅茶(粉末)',                       unit:'袋',     caseUnit:'1ケース/12袋' },
-  { vendor:'apex', name:'9オンス カップ蓋（12オンスもOK）GLDH09BD',  label:'9オンス カップ蓋（12オンスもOK）GLDH09BD',  unit:'本',  caseUnit:'1ケース/20本', caseOnly:true },
-  { vendor:'apex', name:'100RS用カップL（12オンス）SV-350P',         label:'100RS用カップL（12オンス）SV-350P',         unit:'袋',  caseUnit:'1ケース/20本', caseOnly:true },
-  { vendor:'apex', name:'100RS用カップM（9オンス）GDRV09PO',         label:'100RS用カップM（9オンス）GDRV09PO',         unit:'本',  caseUnit:'1ケース/20本', caseOnly:true },
-  { vendor:'apex', name:'ペーパーフィルター',             label:'ペーパーフィルター',               unit:'個',     caseUnit:'' },
-  { vendor:'apex', name:'烏龍茶',                         label:'烏龍茶',                           unit:'袋',     caseUnit:'' },
-  { vendor:'apex', name:'緑茶',                           label:'緑茶',                             unit:'袋',     caseUnit:'' },
-  { vendor:'apex', name:'コカ・コーラ',                   label:'コカ・コーラ',                     unit:'個',     caseUnit:'' },
-  { vendor:'apex', name:'まろやかブドウ',                 label:'まろやかブドウ',                   unit:'個',     caseUnit:'' },
-  { vendor:'apex', name:'レモネード',                     label:'レモネード',                       unit:'袋',     caseUnit:'' },
+  { vendor:'apex', code:'490111135915', name:'抹茶ラテ',                                      label:'抹茶ラテ',                                      unit:'袋', caseUnit:'1ケース/18袋' },
+  { vendor:'apex', code:'490111137634', name:'コーヒー豆',                                    label:'コーヒー豆',                                    unit:'袋', caseUnit:'1ケース/25袋' },
+  { vendor:'apex', code:'456214853012', name:'プレミアムココア',                              label:'プレミアムココア',                              unit:'袋', caseUnit:'1ケース/40袋' },
+  { vendor:'apex', code:'490111135913', name:'ザ・ブレンド豆',                               label:'ザ・ブレンド豆',                               unit:'袋', caseUnit:'1ケース/25袋' },
+  { vendor:'apex', code:'490283171944', name:'いちごオーレ',                                  label:'いちごオーレ',                                  unit:'袋', caseUnit:'1ケース/20袋' },
+  { vendor:'apex', code:'490220107141', name:'クリーミー',                                    label:'クリーミー',                                    unit:'袋', caseUnit:'1ケース/24袋' },
+  { vendor:'apex', code:'497678011211', name:'砂糖',                                          label:'砂糖',                                          unit:'袋', caseUnit:'1ケース/20袋' },
+  { vendor:'apex', code:'490111116424', name:'紅茶(粉末)',                                    label:'紅茶(粉末)',                                    unit:'袋', caseUnit:'1ケース/12袋' },
+  { vendor:'apex', code:'456214853128', name:'アッサム',                                      label:'アッサム',                                      unit:'袋', caseUnit:'' },
+  { vendor:'apex', code:'456214853129', name:'ダージリン',                                    label:'ダージリン',                                    unit:'袋', caseUnit:'' },
+  { vendor:'apex', code:'490217283114', name:'9オンス カップ蓋（12オンスもOK）GLDH09BD',     label:'9オンス カップ蓋（12オンスもOK）GLDH09BD',     unit:'本', caseUnit:'1ケース/20本', caseOnly:true },
+  { vendor:'apex', code:'456214853041', name:'100RS用カップL（12オンス）SV-350P',             label:'100RS用カップL（12オンス）SV-350P',             unit:'袋', caseUnit:'1ケース/20本', caseOnly:true },
+  { vendor:'apex', code:'456214853075', name:'100RS用カップM（9オンス）GDRV09PO',             label:'100RS用カップM（9オンス）GDRV09PO',             unit:'本', caseUnit:'1ケース/20本', caseOnly:true },
+  { vendor:'apex', code:'490217284089', name:'ペーパーフィルター',                            label:'ペーパーフィルター',                            unit:'個', caseUnit:'' },
+  { vendor:'apex', code:'490111118522', name:'烏龍茶',                                        label:'烏龍茶',                                        unit:'袋', caseUnit:'' },
+  { vendor:'apex', code:'490338488102', name:'緑茶',                                          label:'緑茶',                                          unit:'袋', caseUnit:'' },
+  { vendor:'apex', code:'490210201761', name:'コカ・コーラ',                                  label:'コカ・コーラ',                                  unit:'個', caseUnit:'' },
+  { vendor:'apex', code:'490329115701', name:'まろやかブドウ',                                label:'まろやかブドウ',                                unit:'個', caseUnit:'' },
+  { vendor:'apex', code:'456214853112', name:'レモネード',                                    label:'レモネード',                                    unit:'袋', caseUnit:'' },
   /* ── トーヨーベンディング ── */
-  { vendor:'toyo', name:'㋣緑茶',                                   label:'㋣緑茶',                                   unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣カップ（12オンス）',                     label:'㋣カップ（12オンス）',                     unit:'箱',  caseUnit:'1ケース/20本' },
-  { vendor:'toyo', name:'㋣断熱発泡カップ（9オンス）',             label:'㋣断熱発泡カップ（9オンス）',             unit:'箱',  caseUnit:'1ケース/20本' },
-  { vendor:'toyo', name:'㋣紅茶',                                   label:'㋣紅茶',                                   unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣抹茶ラテ',                               label:'㋣抹茶ラテ',                               unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣特選ココア',                              label:'㋣特選ココア',                              unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣ペーパーフィルター',                     label:'㋣ペーパーフィルター',                     unit:'個',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣カップ蓋　リッド（9オンス/12オンスカップ対応）', label:'㋣カップ蓋　リッド（9オンス/12オンスカップ対応）', unit:'箱',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣ブライトクリーミー',                     label:'㋣ブライトクリーミー',                     unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣専用グラニュー糖',                       label:'㋣専用グラニュー糖',                       unit:'袋',  caseUnit:'' },
-  { vendor:'toyo', name:'㋣ミル挽き珈琲　ブレンドB',               label:'㋣ミル挽き珈琲　ブレンドB',               unit:'袋',  caseUnit:'1セット/4袋' },
-  { vendor:'toyo', name:'㋣ミル挽き珈琲　ブレンドA',               label:'㋣ミル挽き珈琲　ブレンドA',               unit:'袋',  caseUnit:'1セット/4袋' },
-  { vendor:'toyo', name:'㋣なっちゃんオレンジBIB(2.5ガロン）',     label:'㋣なっちゃんオレンジBIB(2.5ガロン）',     unit:'箱',  caseUnit:'1ケース/2箱' },
+  { vendor:'toyo', code:'903000354',    name:'㋣緑茶',                                        label:'㋣緑茶',                                        unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'903000406',    name:'㋣カップ（12オンス）',                          label:'㋣カップ（12オンス）',                          unit:'箱', caseUnit:'1ケース/20本' },
+  { vendor:'toyo', code:'77777777',     name:'㋣断熱発泡カップ（9オンス）',                  label:'㋣断熱発泡カップ（9オンス）',                  unit:'箱', caseUnit:'1ケース/20本' },
+  { vendor:'toyo', code:'751157638',    name:'㋣紅茶',                                        label:'㋣紅茶',                                        unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'756416832',    name:'㋣抹茶ラテ',                                    label:'㋣抹茶ラテ',                                    unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'756078979',    name:'㋣特選ココア',                                  label:'㋣特選ココア',                                  unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'710000000',    name:'㋣ペーパーフィルター',                          label:'㋣ペーパーフィルター',                          unit:'個', caseUnit:'' },
+  { vendor:'toyo', code:'701741004',    name:'㋣カップ蓋　リッド（9オンス/12オンスカップ対応）', label:'㋣カップ蓋　リッド（9オンス/12オンスカップ対応）', unit:'箱', caseUnit:'' },
+  { vendor:'toyo', code:'756071413',    name:'㋣ブライトクリーミー',                          label:'㋣ブライトクリーミー',                          unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'760000004',    name:'㋣専用グラニュー糖',                            label:'㋣専用グラニュー糖',                            unit:'袋', caseUnit:'' },
+  { vendor:'toyo', code:'888381200',    name:'㋣ミル挽き珈琲　ブレンドB',                    label:'㋣ミル挽き珈琲　ブレンドB',                    unit:'袋', caseUnit:'1セット/4袋' },
+  { vendor:'toyo', code:'888381199',    name:'㋣ミル挽き珈琲　ブレンドA',                    label:'㋣ミル挽き珈琲　ブレンドA',                    unit:'袋', caseUnit:'1セット/4袋' },
+  { vendor:'toyo', code:'1071216',      name:'㋣なっちゃんオレンジBIB(2.5ガロン）',          label:'㋣なっちゃんオレンジBIB(2.5ガロン）',          unit:'箱', caseUnit:'1ケース/2箱' },
   /* ── 55D CS3 ── */
-  { vendor:'cs3', name:'55D用カップM（ビビ＆けん）GCCVZ9P0',           label:'55D用カップM（ビビ＆けん）GCCVZ9P0',           unit:'本',  caseUnit:'1ケース/25本' },
-  { vendor:'cs3', name:'CS3用カップL（14オンス）SVT-420-2',             label:'CS3用カップL（14オンス）SVT-420-2',             unit:'本',  caseUnit:'1ケース/20本' },
-  { vendor:'cs3', name:'CS3用カップL蓋（14オンス）SVT-311LF',           label:'CS3用カップL蓋（14オンス）SVT-311LF',           unit:'本',  caseUnit:'1ケース/24本' },
-  { vendor:'cs3', name:'アイスカップM S96-365',                         label:'アイスカップM S96-365',                         unit:'本',  caseUnit:'1ケース/20本' },
-  { vendor:'cs3', name:'アイスカップL S96-450',                         label:'アイスカップL S96-450',                         unit:'本',  caseUnit:'1ケース/20本' },
-  { vendor:'cs3', name:'アイスカップ蓋（96口径 プラフタ ストロー穴付）', label:'アイスカップ蓋（96口径 プラフタ ストロー穴付）', unit:'本',  caseUnit:'1ケース/20本' },
-  { vendor:'cs3', name:'スティックシュガー',                            label:'スティックシュガー',                            unit:'箱',  caseUnit:'' },
-  { vendor:'cs3', name:'ガムシロップ',                                  label:'ガムシロップ',                                  unit:'箱',  caseUnit:'' },
-  { vendor:'cs3', name:'ミルク（コーヒーフレッシュ）',                  label:'ミルク（コーヒーフレッシュ）',                  unit:'箱',  caseUnit:'' },
-  /* ── その他 ── */
-  { vendor:'other', name:'ストロー',                       label:'ストロー',                         unit:'箱',     caseUnit:'' },
-  { vendor:'other', name:'ペーパータオル',                 label:'ペーパータオル',                   unit:'箱',     caseUnit:'1セット36箱',  caseOnly:true },
-  { vendor:'other', name:'トイレットペーパー',             label:'トイレットペーパー',               unit:'箱',     caseUnit:'' },
-  { vendor:'other', name:'アイス　チョコ　レディーボーデン',                label:'アイス　チョコ　レディーボーデン',                unit:'箱',  caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', name:'アイス　バニラ　レディーボーデン',                label:'アイス　バニラ　レディーボーデン',                unit:'箱',  caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', name:'アイス　クッキーアンドクリーム　レディーボーデン', label:'アイス　クッキーアンドクリーム　レディーボーデン', unit:'箱',  caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', name:'水',                             label:'水',                               unit:'箱',     caseUnit:'1ケース/24本', caseOnly:true },
-  { vendor:'other', name:'クランキーアーモンドチョコレートプチパック', label:'クランキーアーモンドチョコレートプチパック', unit:'袋', caseUnit:'' },
-  { vendor:'other', name:'果汁グミ',                       label:'果汁グミ',                           unit:'袋',     caseUnit:'' },
-  { vendor:'other', name:'プリングルス',                   label:'プリングルス',                       unit:'袋',     caseUnit:'' },
-  { vendor:'other', name:'ソイジョイ',                     label:'ソイジョイ',                         unit:'袋',     caseUnit:'' },
-  { vendor:'other', name:'プチシリーズ',                   label:'プチシリーズ',                       unit:'袋',     caseUnit:'' },
-  { vendor:'other', name:'大粒ラムネ',                     label:'大粒ラムネ',                         unit:'袋',     caseUnit:'' },
-  { vendor:'other', name:'その他',                         label:'その他',                               unit:'',       caseUnit:'' },
+  { vendor:'cs3',  code:'456214853082', name:'55D用カップM（ビビ＆けん）GCCVZ9P0',           label:'55D用カップM（ビビ＆けん）GCCVZ9P0',           unit:'本', caseUnit:'1ケース/25本' },
+  { vendor:'cs3',  code:'456214853068', name:'CS3用カップL（14オンス）SVT-420-2',             label:'CS3用カップL（14オンス）SVT-420-2',             unit:'本', caseUnit:'1ケース/20本' },
+  { vendor:'cs3',  code:'456214853058', name:'CS3用カップL蓋（14オンス）SVT-311LF',           label:'CS3用カップL蓋（14オンス）SVT-311LF',           unit:'本', caseUnit:'1ケース/24本' },
+  { vendor:'cs3',  code:'41570094800',  name:'アイスカップM S96-365',                         label:'アイスカップM S96-365',                         unit:'本', caseUnit:'1ケース/20本' },
+  { vendor:'cs3',  code:'41570095500',  name:'アイスカップL S96-450',                         label:'アイスカップL S96-450',                         unit:'本', caseUnit:'1ケース/20本' },
+  { vendor:'cs3',  code:'41570096200',  name:'アイスカップ蓋（96口径 プラフタ ストロー穴付）', label:'アイスカップ蓋（96口径 プラフタ ストロー穴付）', unit:'本', caseUnit:'1ケース/20本' },
+  { vendor:'cs3',  code:'497754801102', name:'スティックシュガー',                            label:'スティックシュガー',                            unit:'箱', caseUnit:'' },
+  { vendor:'cs3',  code:'490239018232', name:'ガムシロップ',                                  label:'ガムシロップ',                                  unit:'箱', caseUnit:'' },
+  { vendor:'cs3',  code:'490239040020', name:'ミルク（コーヒーフレッシュ）',                  label:'ミルク（コーヒーフレッシュ）',                  unit:'箱', caseUnit:'' },
+  /* ── その他（コードなし） ── */
+  { vendor:'other', code:'', name:'ストロー',                                label:'ストロー',                                unit:'箱', caseUnit:'' },
+  { vendor:'other', code:'', name:'ペーパータオル',                          label:'ペーパータオル',                          unit:'箱', caseUnit:'1セット36箱', caseOnly:true },
+  { vendor:'other', code:'', name:'トイレットペーパー',                      label:'トイレットペーパー',                      unit:'箱', caseUnit:'' },
+  { vendor:'other', code:'', name:'アイス　チョコ　レディーボーデン',        label:'アイス　チョコ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'other', code:'', name:'アイス　バニラ　レディーボーデン',        label:'アイス　バニラ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'other', code:'', name:'アイス　クッキーアンドクリーム　レディーボーデン', label:'アイス　クッキーアンドクリーム　レディーボーデン', unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'other', code:'', name:'水',                                      label:'水',                                      unit:'箱', caseUnit:'1ケース/24本', caseOnly:true },
+  { vendor:'other', code:'', name:'クランキーアーモンドチョコレートプチパック', label:'クランキーアーモンドチョコレートプチパック', unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'果汁グミ',                                label:'果汁グミ',                                unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'プリングルス',                            label:'プリングルス',                            unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'ソイジョイ',                              label:'ソイジョイ',                              unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'プチシリーズ',                            label:'プチシリーズ',                            unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'大粒ラムネ',                              label:'大粒ラムネ',                              unit:'袋', caseUnit:'' },
+  { vendor:'other', code:'', name:'その他',                                  label:'その他',                                  unit:'',   caseUnit:'' },
 ];
 
 let VENDOR_CONFIG = [
@@ -890,6 +892,7 @@ function renderInventory() {
     const d = data[p.name] || {};
     const caseLabel = p.caseUnit || '―';
     return `<tr style="border-bottom:1px solid #f0f0f0">
+      <td style="padding:8px 10px;font-size:12px;color:#888;white-space:nowrap">${esc(p.code||'')}</td>
       <td style="padding:8px 10px;font-size:13px">${esc(p.label)}</td>
       <td style="padding:8px 10px;font-size:12px;color:#666;white-space:nowrap">${esc(caseLabel)}</td>
       <td style="padding:6px 8px;text-align:center">
@@ -914,6 +917,7 @@ function renderInventory() {
   wrap.innerHTML = `<div style="overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)">
       <thead><tr style="background:#22703d;color:white">
+        <th style="padding:9px 12px;font-size:13px;text-align:left;white-space:nowrap">コード</th>
         <th style="padding:9px 12px;font-size:13px;text-align:left;white-space:nowrap">商品名</th>
         <th style="padding:9px 12px;font-size:13px;text-align:left;white-space:nowrap">ケース・入り数</th>
         <th style="padding:9px 12px;font-size:13px;text-align:center;white-space:nowrap">数量</th>
