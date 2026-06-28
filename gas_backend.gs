@@ -245,3 +245,95 @@ function notifyNewOrder_(storeId) {
     console.error('LINE WORKS通知エラー:', e.message);
   }
 }
+
+function createLineWorksJWT_() {
+  var props = PropertiesService.getScriptProperties();
+  var clientId = props.getProperty('LW_CLIENT_ID');
+  var serviceAccount = props.getProperty('LW_SERVICE_ACCT');
+  var rawKey = props.getProperty('LW_PRIVATE_KEY');
+  var base64Body = rawKey.replace('-----BEGIN PRIVATE KEY-----', '').replace('-----END PRIVATE KEY-----', '').replace(/\s/g, '');
+  var lines = [];
+  var i = 0;
+  while (i < base64Body.length) {
+    lines.push(base64Body.substring(i, i + 64));
+    i += 64;
+  }
+  var privateKey = '-----BEGIN PRIVATE KEY-----\n' + lines.join('\n') + '\n-----END PRIVATE KEY-----';
+  var header = Utilities.base64EncodeWebSafe(JSON.stringify({alg:'RS256',typ:'JWT'})).replace(/=+$/, '');
+  var now = Math.floor(new Date().getTime() / 1000);
+  var payload = JSON.stringify({iss:clientId, sub:serviceAccount, iat:now, exp:now+3600});
+  var claim = Utilities.base64EncodeWebSafe(payload).replace(/=+$/, '');
+  var sigInput = header + '.' + claim;
+  var sig = Utilities.base64EncodeWebSafe(Utilities.computeRsaSha256Signature(sigInput, privateKey)).replace(/=+$/, '');
+  return sigInput + '.' + sig;
+}
+
+function getLineWorksAccessToken_() {
+  var props = PropertiesService.getScriptProperties();
+  var jwt = createLineWorksJWT_();
+  var payload = 'assertion=' + encodeURIComponent(jwt)
+    + '&grant_type=' + encodeURIComponent('urn:ietf:params:oauth:grant-type:jwt-bearer')
+    + '&client_id=' + encodeURIComponent(props.getProperty('LW_CLIENT_ID'))
+    + '&client_secret=' + encodeURIComponent(props.getProperty('LW_CLIENT_SECRET'))
+    + '&scope=bot.message';
+  var res = UrlFetchApp.fetch('https://auth.worksmobile.com/oauth2/v2.0/token', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    payload: payload
+  });
+  return JSON.parse(res.getContentText()).access_token;
+}
+
+function sendLineWorksNotification(message) {
+  var props = PropertiesService.getScriptProperties();
+  var botId = props.getProperty('LW_BOT_ID');
+  var userId = props.getProperty('LW_USER_ID');
+  var token = getLineWorksAccessToken_();
+  var url = 'https://www.worksapis.com/v1.0/bots/' + botId + '/users/' + userId + '/messages';
+  var body = JSON.stringify({content: {type: 'text', text: message}});
+  UrlFetchApp.fetch(url, {
+    method: 'POST',
+    headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
+    payload: body
+  });
+}
+
+function testLineWorksNotification() {
+  sendLineWorksNotification('【テスト】LINE WORKS通知の接続テストです。');
+}
+
+function testNotify() {
+  notifyNewOrder_('shibuya');
+}
+
+function sendDailyOrderNotification() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_ORDERS);
+  if (!sheet || sheet.getLastRow() <= 1) return;
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0];
+  var storeIdx = headers.indexOf('store_id');
+  var isNewIdx = headers.indexOf('is_new');
+  var hasTokai = false, hasKansai = false, hasKanto = false;
+  for (var i = 1; i < data.length; i++) {
+    var isNew = data[i][isNewIdx];
+    if (isNew !== true && String(isNew) !== 'TRUE') continue;
+    var storeId = String(data[i][storeIdx]);
+    if (AREA_STORES['東海'].indexOf(storeId) >= 0) hasTokai = true;
+    if (AREA_STORES['関西'].indexOf(storeId) >= 0) hasKansai = true;
+    if (AREA_STORES['関東'].indexOf(storeId) >= 0) hasKanto = true;
+  }
+  if (hasTokai) sendLineWorksNotification('東海エリアにて発注依頼があります。');
+  if (hasKansai) sendLineWorksNotification('関西エリアにて発注依頼があります。');
+  if (hasKanto) sendLineWorksNotification('関東エリアにて発注依頼があります。');
+}
+
+function setDailyTrigger() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'sendDailyOrderNotification') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger('sendDailyOrderNotification').timeBased().atHour(8).nearMinute(30).everyDays(1).inTimezone('Asia/Tokyo').create();
+}
