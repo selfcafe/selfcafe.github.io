@@ -136,10 +136,6 @@ function saveOrders(storeId, rows) {
     sheet.getRange(sheet.getLastRow() + 1, 1, newRows.length, ORDER_COLS.length).setValues(newRows);
   }
 
-  // 新規発注があれば即時通知
-  const hasNew = rows.some(r => r.is_new === true || r.is_new === 'TRUE');
-  if (hasNew) notifyNewOrder_(storeId);
-
   return { ok: true };
 }
 
