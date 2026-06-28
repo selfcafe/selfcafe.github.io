@@ -16,6 +16,13 @@ const ORDER_COLS = [
 ];
 const LOST_COLS = ['id','store_id','found_date','note','image_url','added_at'];
 
+// エリア別店舗ID
+const AREA_STORES = {
+  '東海': ['sasashima','chikusa','gokaiso','tsuruma','kamisawa','nakamura_nisseki','midori_kofubutsu','sakurayama','akatsuka','shin_moriyama','tokoname','hamamatsu','sakae','rokubanchou','nonami','seto_iwayadou','nagakute','meieki_nishi','nadia_sakae','shinmizuhashi','eisei','hotei','kamejima','nakamura_torii','taikodori','kouta','hibino','hoshigaoka','ikeshita','toyota','hara','fujigaoka','gifu_kitagata','narumi'],
+  '関西': ['tenma','higashiosaka','aikawa','minami_morimachi','abeno','tanimachi9','moriguchi','taishibashi','kyobashi_kita','shinsaibashi','kishi','umeda','kami_shinjyo','osaka_hirano','hikone','aeon_higashiosaka','gamo4'],
+  '関東': ['inzai','otsuka','sugamo','umejima','shibuya','shinjuku_fc','kamisato']
+};
+
 // ----------------------------------------------------------------
 // エントリーポイント
 // ----------------------------------------------------------------
@@ -128,6 +135,11 @@ function saveOrders(storeId, rows) {
     );
     sheet.getRange(sheet.getLastRow() + 1, 1, newRows.length, ORDER_COLS.length).setValues(newRows);
   }
+
+  // 新規発注があれば即時通知
+  const hasNew = rows.some(r => r.is_new === true || r.is_new === 'TRUE');
+  if (hasNew) notifyNewOrder_(storeId);
+
   return { ok: true };
 }
 
@@ -209,4 +221,79 @@ function saveImageToDrive(base64, mimeType, filename) {
   const file   = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return 'https://drive.google.com/uc?export=view&id=' + file.getId();
+}
+
+// ----------------------------------------------------------------
+// LINE WORKS 通知
+// ----------------------------------------------------------------
+
+function notifyNewOrder_(storeId) {
+  try {
+    var area = '';
+    for (var areaName in AREA_STORES) {
+      if (AREA_STORES[areaName].indexOf(String(storeId)) >= 0) {
+        area = areaName;
+        break;
+      }
+    }
+    var msg = area
+      ? area + 'エリアにて発注依頼があります。'
+      : '発注依頼があります。（店舗ID: ' + storeId + '）';
+    sendLineWorksNotification_(msg);
+  } catch(e) {
+    // 通知失敗は保存結果に影響させない
+    console.error('LINE WORKS通知エラー:', e.message);
+  }
+}
+
+function createLineWorksJWT_() {
+  var props = PropertiesService.getScriptProperties();
+  var clientId = props.getProperty('LW_CLIENT_ID');
+  var serviceAccount = props.getProperty('LW_SERVICE_ACCT');
+  var rawKey = props.getProperty('LW_PRIVATE_KEY');
+  var base64Body = rawKey.replace('-----BEGIN PRIVATE KEY-----', '').replace('-----END PRIVATE KEY-----', '').replace(/\s/g, '');
+  var lines = [];
+  var i = 0;
+  while (i < base64Body.length) {
+    lines.push(base64Body.substring(i, i + 64));
+    i += 64;
+  }
+  var privateKey = '-----BEGIN PRIVATE KEY-----\n' + lines.join('\n') + '\n-----END PRIVATE KEY-----';
+  var header = Utilities.base64EncodeWebSafe(JSON.stringify({alg:'RS256',typ:'JWT'})).replace(/=+$/, '');
+  var now = Math.floor(new Date().getTime() / 1000);
+  var payload = JSON.stringify({iss:clientId, sub:serviceAccount, iat:now, exp:now+3600});
+  var claim = Utilities.base64EncodeWebSafe(payload).replace(/=+$/, '');
+  var sigInput = header + '.' + claim;
+  var sig = Utilities.base64EncodeWebSafe(Utilities.computeRsaSha256Signature(sigInput, privateKey)).replace(/=+$/, '');
+  return sigInput + '.' + sig;
+}
+
+function getLineWorksAccessToken_() {
+  var props = PropertiesService.getScriptProperties();
+  var jwt = createLineWorksJWT_();
+  var payload = 'assertion=' + encodeURIComponent(jwt)
+    + '&grant_type=' + encodeURIComponent('urn:ietf:params:oauth:grant-type:jwt-bearer')
+    + '&client_id=' + encodeURIComponent(props.getProperty('LW_CLIENT_ID'))
+    + '&client_secret=' + encodeURIComponent(props.getProperty('LW_CLIENT_SECRET'))
+    + '&scope=bot.message';
+  var res = UrlFetchApp.fetch('https://auth.worksmobile.com/oauth2/v2.0/token', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    payload: payload
+  });
+  return JSON.parse(res.getContentText()).access_token;
+}
+
+function sendLineWorksNotification_(message) {
+  var props = PropertiesService.getScriptProperties();
+  var botId = props.getProperty('LW_BOT_ID');
+  var userId = props.getProperty('LW_USER_ID');
+  var token = getLineWorksAccessToken_();
+  var url = 'https://www.worksapis.com/v1.0/bots/' + botId + '/users/' + userId + '/messages';
+  var body = JSON.stringify({content: {type: 'text', text: message}});
+  UrlFetchApp.fetch(url, {
+    method: 'POST',
+    headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
+    payload: body
+  });
 }
