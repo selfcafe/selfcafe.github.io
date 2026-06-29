@@ -664,9 +664,9 @@ function _initRealtime() {
 const PRODUCTS = [
   /* ── アペックス 100RS ── */
   { vendor:'apex', code:'490111135915', name:'抹茶ラテ',                                      label:'抹茶ラテ',                                      unit:'袋', caseUnit:'1ケース/18袋' },
-  { vendor:'apex', code:'490111137634', name:'コーヒー豆',                                    label:'コーヒー豆',                                    unit:'袋', caseUnit:'1ケース/25袋' },
+  { vendor:'apex', code:'490111137634', name:'ロースト',                                      label:'ロースト',                                      unit:'袋', caseUnit:'1ケース/25袋' },
   { vendor:'apex', code:'456214853012', name:'プレミアムココア',                              label:'プレミアムココア',                              unit:'袋', caseUnit:'1ケース/40袋' },
-  { vendor:'apex', code:'490111135913', name:'ザ・ブレンド豆',                               label:'ザ・ブレンド豆',                               unit:'袋', caseUnit:'1ケース/25袋' },
+  { vendor:'apex', code:'490111135913', name:'ブレンド',                                      label:'ブレンド',                                      unit:'袋', caseUnit:'1ケース/25袋' },
   { vendor:'apex', code:'490283171944', name:'いちごオーレ',                                  label:'いちごオーレ',                                  unit:'袋', caseUnit:'1ケース/20袋' },
   { vendor:'apex', code:'490220107141', name:'クリーミー',                                    label:'クリーミー',                                    unit:'袋', caseUnit:'1ケース/24袋' },
   { vendor:'apex', code:'497678011211', name:'砂糖',                                          label:'砂糖',                                          unit:'袋', caseUnit:'1ケース/20袋' },
@@ -2643,6 +2643,11 @@ function saveAllProducts() {
   _gasSaveSetting('all_products', json);
 }
 
+const PRODUCT_RENAMES = {
+  'コーヒー豆':  'ロースト',
+  'ザ・ブレンド豆': 'ブレンド',
+};
+
 const LEGACY_PRODUCT_NAMES = new Set([
   '㋣リッド（9オンス/12オンスカップ対応）',
   'アイス　クッキーアンドクリーム',
@@ -2659,7 +2664,12 @@ const LEGACY_PRODUCT_NAMES = new Set([
 function loadProductSettings() {
   const saved = localStorage.getItem(ALL_PRODUCTS_KEY);
   if (saved) {
-    const savedList = JSON.parse(saved).filter(p => !LEGACY_PRODUCT_NAMES.has(p.name));
+    const savedList = JSON.parse(saved)
+      .filter(p => !LEGACY_PRODUCT_NAMES.has(p.name))
+      .map(p => {
+        const newName = PRODUCT_RENAMES[p.name];
+        return newName ? { ...p, name: newName, label: newName } : p;
+      });
     const savedNames = new Set(savedList.map(p => p.name));
     // 保存済みリストをベースに、コードに新規追加された商品を末尾に追記
     const defaults = JSON.parse(JSON.stringify(PRODUCTS));
@@ -2671,6 +2681,31 @@ function loadProductSettings() {
     });
     defaults.forEach(p => { if (!savedNames.has(p.name)) PRODUCTS.push(p); });
   }
+}
+
+function migrateProductRenames() {
+  if (!Object.keys(PRODUCT_RENAMES).length) return;
+  // store_product_cfg のキーを新名称に更新
+  const cfg = JSON.parse(localStorage.getItem(STORE_PRODUCTS_KEY) || '{}');
+  let cfgChanged = false;
+  Object.keys(cfg).forEach(sid => {
+    if (!Array.isArray(cfg[sid])) return;
+    cfg[sid] = cfg[sid].map(n => { const r = PRODUCT_RENAMES[n]; if (r) { cfgChanged = true; return r; } return n; });
+  });
+  if (cfgChanged) localStorage.setItem(STORE_PRODUCTS_KEY, JSON.stringify(cfg));
+  // inventory_data のキーを新名称に更新
+  const inv = JSON.parse(localStorage.getItem(INVENTORY_KEY) || '{}');
+  let invChanged = false;
+  Object.keys(inv).forEach(sid => {
+    Object.keys(PRODUCT_RENAMES).forEach(oldName => {
+      if (inv[sid] && inv[sid][oldName] !== undefined) {
+        inv[sid][PRODUCT_RENAMES[oldName]] = inv[sid][oldName];
+        delete inv[sid][oldName];
+        invChanged = true;
+      }
+    });
+  });
+  if (invChanged) localStorage.setItem(INVENTORY_KEY, JSON.stringify(inv));
 }
 
 function saveProductSetting(name, field, value) {
@@ -3260,6 +3295,7 @@ loadDeletedStores();
 loadStoreRegions();
 loadVendorConfig();
 loadProductSettings();
+migrateProductRenames();
 purgeHistory();
 applyTimeMsg();
 populateLoginStoreSelect();
