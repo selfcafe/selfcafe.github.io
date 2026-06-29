@@ -282,10 +282,10 @@ function getLineWorksAccessToken_() {
 
 function sendLineWorksNotification(message) {
   var props = PropertiesService.getScriptProperties();
-  var botId = props.getProperty('LW_BOT_ID');
-  var userId = props.getProperty('LW_USER_ID');
+  var botId     = props.getProperty('LW_BOT_ID');
+  var channelId = props.getProperty('LW_CHANNEL_ID');
   var token = getLineWorksAccessToken_();
-  var url = 'https://www.worksapis.com/v1.0/bots/' + botId + '/users/' + userId + '/messages';
+  var url = 'https://www.worksapis.com/v1.0/bots/' + botId + '/channels/' + channelId + '/messages';
   var body = JSON.stringify({content: {type: 'text', text: message}});
   UrlFetchApp.fetch(url, {
     method: 'POST',
