@@ -2663,8 +2663,12 @@ function loadProductSettings() {
     const savedNames = new Set(savedList.map(p => p.name));
     // 保存済みリストをベースに、コードに新規追加された商品を末尾に追記
     const defaults = JSON.parse(JSON.stringify(PRODUCTS));
+    const defaultsByName = Object.fromEntries(defaults.map(p => [p.name, p]));
     PRODUCTS.length = 0;
-    savedList.forEach(p => PRODUCTS.push(p));
+    savedList.forEach(p => {
+      const def = defaultsByName[p.name];
+      PRODUCTS.push(def ? { ...p, vendor: def.vendor } : p);
+    });
     defaults.forEach(p => { if (!savedNames.has(p.name)) PRODUCTS.push(p); });
   }
 }
