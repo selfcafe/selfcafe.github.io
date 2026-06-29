@@ -3,7 +3,7 @@
 // ============================================================
 // 【設定】デプロイ前に以下2行を入力してください
 const SHEET_ID        = '';  // GoogleスプレッドシートのID
-const IMAGE_FOLDER_ID = '1adg7TQIYXSkWIo19ohVo93raDY2HsTW';  // 画像保存用DriveフォルダのID
+const IMAGE_FOLDER_ID = '1adg7TQIYXSkWIo19ohVo93raDY2HsTW_';  // 画像保存用DriveフォルダのID
 
 const SHEET_ORDERS   = 'orders';
 const SHEET_SETTINGS = 'app_settings';
