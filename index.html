@@ -710,25 +710,28 @@ const PRODUCTS = [
   { vendor:'other', code:'', name:'ストロー',                                label:'ストロー',                                unit:'箱', caseUnit:'' },
   { vendor:'other', code:'', name:'ペーパータオル',                          label:'ペーパータオル',                          unit:'箱', caseUnit:'1セット36箱', caseOnly:true },
   { vendor:'other', code:'', name:'トイレットペーパー',                      label:'トイレットペーパー',                      unit:'箱', caseUnit:'' },
-  { vendor:'other', code:'', name:'アイス　チョコ　レディーボーデン',        label:'アイス　チョコ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', code:'', name:'アイス　バニラ　レディーボーデン',        label:'アイス　バニラ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', code:'', name:'アイス　クッキーアンドクリーム　レディーボーデン', label:'アイス　クッキーアンドクリーム　レディーボーデン', unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
-  { vendor:'other', code:'', name:'水',                                      label:'水',                                      unit:'箱', caseUnit:'1ケース/24本', caseOnly:true },
-  { vendor:'other', code:'', name:'クランキーアーモンドチョコレートプチパック', label:'クランキーアーモンドチョコレートプチパック', unit:'袋', caseUnit:'' },
-  { vendor:'other', code:'', name:'果汁グミ',                                label:'果汁グミ',                                unit:'袋', caseUnit:'' },
-  { vendor:'other', code:'', name:'プリングルス',                            label:'プリングルス',                            unit:'袋', caseUnit:'' },
-  { vendor:'other', code:'', name:'ソイジョイ',                              label:'ソイジョイ',                              unit:'袋', caseUnit:'' },
-  { vendor:'other', code:'', name:'プチシリーズ',                            label:'プチシリーズ',                            unit:'袋', caseUnit:'' },
-  { vendor:'other', code:'', name:'大粒ラムネ',                              label:'大粒ラムネ',                              unit:'袋', caseUnit:'' },
   { vendor:'other', code:'', name:'その他',                                  label:'その他',                                  unit:'',   caseUnit:'' },
+  /* ── 販売品 ── */
+  { vendor:'sales', code:'', name:'アイス　チョコ　レディーボーデン',        label:'アイス　チョコ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'sales', code:'', name:'アイス　バニラ　レディーボーデン',        label:'アイス　バニラ　レディーボーデン',        unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'sales', code:'', name:'アイス　クッキーアンドクリーム　レディーボーデン', label:'アイス　クッキーアンドクリーム　レディーボーデン', unit:'箱', caseUnit:'1ケース/36個', caseOnly:true },
+  { vendor:'sales', code:'', name:'水',                                      label:'水',                                      unit:'箱', caseUnit:'1ケース/24本', caseOnly:true },
+  { vendor:'sales', code:'', name:'クランキーアーモンドチョコレートプチパック', label:'クランキーアーモンドチョコレートプチパック', unit:'袋', caseUnit:'' },
+  { vendor:'sales', code:'', name:'果汁グミ',                                label:'果汁グミ',                                unit:'袋', caseUnit:'' },
+  { vendor:'sales', code:'', name:'プリングルス',                            label:'プリングルス',                            unit:'袋', caseUnit:'' },
+  { vendor:'sales', code:'', name:'ソイジョイ',                              label:'ソイジョイ',                              unit:'袋', caseUnit:'' },
+  { vendor:'sales', code:'', name:'プチシリーズ',                            label:'プチシリーズ',                            unit:'袋', caseUnit:'' },
+  { vendor:'sales', code:'', name:'大粒ラムネ',                              label:'大粒ラムネ',                              unit:'袋', caseUnit:'' },
 ];
 
-let VENDOR_CONFIG = [
+const DEFAULT_VENDOR_CONFIG = [
   {key:'apex',  label:'アペックス 100RS'},
   {key:'toyo',  label:'トーヨーベンディング'},
   {key:'cs3',   label:'55D CS3'},
   {key:'other', label:'その他'},
+  {key:'sales', label:'販売品'},
 ];
+let VENDOR_CONFIG = [...DEFAULT_VENDOR_CONFIG];
 const VENDOR_CONFIG_KEY = 'vendor_config';
 function saveVendorConfig() {
   const json = JSON.stringify(VENDOR_CONFIG);
@@ -737,7 +740,13 @@ function saveVendorConfig() {
 }
 function loadVendorConfig() {
   const saved = localStorage.getItem(VENDOR_CONFIG_KEY);
-  if (saved) { VENDOR_CONFIG.length = 0; JSON.parse(saved).forEach(v => VENDOR_CONFIG.push(v)); }
+  if (saved) {
+    const savedList = JSON.parse(saved);
+    const savedKeys = new Set(savedList.map(v => v.key));
+    VENDOR_CONFIG.length = 0;
+    savedList.forEach(v => VENDOR_CONFIG.push(v));
+    DEFAULT_VENDOR_CONFIG.forEach(v => { if (!savedKeys.has(v.key)) VENDOR_CONFIG.push(v); });
+  }
 }
 
 const STORES = {
