@@ -51,6 +51,7 @@ function doPost(e) {
     else if (b.action === 'saveSetting')    result = saveSetting(b.key, b.value);
     else if (b.action === 'saveLostItem')   result = saveLostItem(b.item, b.imageBase64, b.imageMime);
     else if (b.action === 'deleteLostItem') result = deleteLostItem(b.id, b.imageUrl);
+    else if (b.action === 'saveOrderImage') result = saveOrderImage(b.imageBase64, b.imageMime, b.filename);
     else result = { error: 'Unknown action: ' + b.action };
     return json(result);
   } catch(err) {
@@ -205,6 +206,16 @@ function deleteLostItem(id, imageUrl) {
     } catch(e) {}
   }
   return { ok: true };
+}
+
+// ----------------------------------------------------------------
+// 発注画像
+// ----------------------------------------------------------------
+
+function saveOrderImage(imageBase64, imageMime, filename) {
+  if (!IMAGE_FOLDER_ID) return { error: 'IMAGE_FOLDER_IDが設定されていません' };
+  const imageUrl = saveImageToDrive(imageBase64, imageMime || 'image/jpeg', filename || 'order_img');
+  return { ok: true, image_url: imageUrl };
 }
 
 // ----------------------------------------------------------------
