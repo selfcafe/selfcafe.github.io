@@ -1323,14 +1323,9 @@ function touchActivity() {
 }
 
 function prefillLastPassword() {
-  const lastStore = localStorage.getItem('last_login_store');
-  if (!lastStore) return;
-  try {
-    const pws = JSON.parse(localStorage.getItem(STORE_PW_KEY) || '{}');
-    const pw = pws[lastStore];
-    const inp = document.getElementById('site-pw-input');
-    if (pw && inp) inp.value = pw;
-  } catch(_) {}
+  const pw = localStorage.getItem('last_login_pw');
+  const inp = document.getElementById('site-pw-input');
+  if (pw && inp) inp.value = pw;
 }
 
 function adminLogout() {
@@ -1401,6 +1396,7 @@ function submitSiteLogin() {
       setTimeout(() => { err.textContent = ''; }, 2000);
       return;
     }
+    localStorage.setItem('last_login_pw', val);
     if (storeId === '__admin__') {
       sessionStorage.setItem('admin_authed', '1');
       sessionStorage.setItem('last_active', String(Date.now()));
