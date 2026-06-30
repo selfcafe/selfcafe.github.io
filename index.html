@@ -301,15 +301,9 @@
     <p>パスワードを入力してください</p>
     <form id="site-login-form" onsubmit="submitSiteLogin(); return false;" autocomplete="on">
       <input type="text" name="username" autocomplete="username" style="display:none" aria-hidden="true">
-      <div style="position:relative">
+      <div>
         <input class="pin-input" id="site-pw-input" type="password" name="password"
-          autocomplete="current-password" placeholder="パスワード" style="padding-right:52px">
-        <button type="button" tabindex="-1"
-          style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:4px;color:#aaa;font-size:22px;line-height:1;user-select:none"
-          onmousedown="showPwField('site-pw-input',event)" onmouseup="hidePwField('site-pw-input')" onmouseleave="hidePwField('site-pw-input')"
-          ontouchstart="showPwField('site-pw-input',event)" ontouchend="hidePwField('site-pw-input')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
+          autocomplete="current-password" placeholder="パスワード">
       </div>
       <div class="pin-error" id="site-pw-error"></div>
       <button type="submit" class="btn-pin-submit">ログイン</button>
