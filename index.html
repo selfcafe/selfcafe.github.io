@@ -1328,6 +1328,17 @@ function touchActivity() {
   }
 }
 
+function prefillLastPassword() {
+  const lastStore = localStorage.getItem('last_login_store');
+  if (!lastStore) return;
+  try {
+    const pws = JSON.parse(localStorage.getItem(STORE_PW_KEY) || '{}');
+    const pw = pws[lastStore];
+    const inp = document.getElementById('site-pw-input');
+    if (pw && inp) inp.value = pw;
+  } catch(_) {}
+}
+
 function adminLogout() {
   sessionStorage.removeItem('admin_authed');
   document.getElementById('page-admin').classList.remove('active');
@@ -1335,6 +1346,7 @@ function adminLogout() {
   lock.classList.remove('hidden');
   const inp = document.getElementById('site-pw-input');
   inp.value = '';
+  prefillLastPassword();
   setTimeout(() => inp.focus(), 100);
 }
 
@@ -1348,6 +1360,7 @@ function siteLogout() {
   lock.classList.remove('hidden');
   const inp = document.getElementById('site-pw-input');
   inp.value = '';
+  prefillLastPassword();
   populateLoginStoreSelect();
   setTimeout(() => inp.focus(), 100);
 }
@@ -1362,6 +1375,7 @@ function autoLogout() {
   lock.classList.remove('hidden');
   const inp = document.getElementById('site-pw-input');
   inp.value = '';
+  prefillLastPassword();
   populateLoginStoreSelect();
   document.getElementById('site-pw-error').textContent = 'セッションが切れました。再度ログインしてください。';
   setTimeout(() => { document.getElementById('site-pw-error').textContent = ''; inp.focus(); }, 100);
@@ -3369,6 +3383,7 @@ populateLoginStoreSelect();
     showPage('store');
   } else {
     document.getElementById('site-lock').classList.remove('hidden');
+    prefillLastPassword();
     setTimeout(() => document.getElementById('site-pw-input')?.focus(), 100);
   }
 })();
